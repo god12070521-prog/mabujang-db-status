@@ -2,6 +2,8 @@
 
 고객 자료를 읽거나 쓰지 않고, 고정 상태만 반환하는 DB 함수를 하루 네 번 조회한다. Python 표준 라이브러리만 사용한다.
 
+2026-10-20: [정상 수동 실행](https://github.com/god12070521-prog/mabujang-db-status/actions/runs/39392329344)에서 실제 DB 응답을 확인했다. 정규 일정은 활성화했고 기존 비공개 점검은 중지했다. GitHub의 예약 생성 지연으로 첫 자동 실행은 아직 확인하지 못했으며, 임시 검수 일정은 제거했다. 이후 [실행 기록](https://github.com/god12070521-prog/mabujang-db-status/actions/workflows/supabase-healthcheck.yml)에서 `schedule` 실행의 성공 여부를 확인한다.
+
 ## 공개되는 정보
 
 이 저장소의 파일 3개, 실행 시각·성공/실패·HTTP 상태/오류 종류, 장애·복구 이슈가 공개된다. 앱 소스·설치 파일·고객 콘텐츠는 포함하지 않는다. DB 주소와 공개 publishable key도 파일에 넣지 않고 저장소 Actions secrets로 설정한다. 서비스 키·DB 비밀번호·관리 토큰은 사용하지 않는다.
@@ -11,7 +13,7 @@
 1. 이 폴더의 파일 3개만 별도 **공개** 저장소의 기본 브랜치에 올린다. 기존 앱 저장소는 비공개로 유지한다.
 2. Settings → Secrets and variables → Actions → Repository secrets에 `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`를 등록한다. 후자는 기존 앱에서 쓰는 공개 키이며 특권 키를 넣으면 안 된다.
 3. Actions → Supabase DB heartbeat → Run workflow에서 두 시험 옵션을 끈 채 한 번 실행하고 `Database RPC returned ok=true`를 확인한다.
-4. 실제 정기 실행까지 성공한 다음 기존 비공개 저장소의 heartbeat만 Disable한다. 다른 빌드 워크플로와 다운로드·업데이트는 그대로 둔다.
+4. 실제 정상 조회와 정규 일정·활성 상태를 확인한 뒤 기존 비공개 저장소의 heartbeat만 Disable한다. 첫 정기 실행도 실제 기록에서 확인한다. 다른 빌드 워크플로와 다운로드·업데이트는 그대로 둔다.
 
 ## 실행·알림
 
