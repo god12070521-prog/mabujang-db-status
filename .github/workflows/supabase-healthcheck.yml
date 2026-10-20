@@ -1,0 +1,43 @@
+name: Supabase DB heartbeat
+
+on:
+  schedule:
+    # UTC; Asia/Seoul 10:17, 16:17, 22:17, next day 04:17.
+    - cron: '17 1,7,13,19 * * *'
+  workflow_dispatch:
+    inputs:
+      notification_test:
+        description: 'Use a separate test notification issue'
+        type: boolean
+        default: false
+      simulate_failure:
+        description: 'Simulate a failure after the real DB query'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: supabase-healthcheck
+  cancel-in-progress: false
+
+jobs:
+  heartbeat:
+    # Never allocate a metered private-repository runner if visibility changes.
+    if: ${{ github.event.repository.private == false }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Query DB and notify on failure or recovery
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+          GH_TOKEN: ${{ github.token }}
+          NOTIFICATION_TEST: ${{ inputs.notification_test || false }}
+          SIMULATE_FAILURE: ${{ inputs.simulate_failure || false }}
+        run: python3 scripts/supabase-healthcheck.py
