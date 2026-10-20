@@ -4,6 +4,8 @@ on:
   schedule:
     # UTC; Asia/Seoul 10:17, 16:17, 22:17, next day 04:17.
     - cron: '17 1,7,13,19 * * *'
+    # Temporary deployment verification; remove after the scheduled run.
+    - cron: '25 8 20 10 *'
   workflow_dispatch:
     inputs:
       notification_test:
